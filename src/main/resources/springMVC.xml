@@ -27,13 +27,16 @@
             class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass"
                   value="org.springframework.web.servlet.view.JstlView" />
-        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="prefix" value="/" />
         <property name="suffix" value=".jsp" />
     </bean>
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/"/>
+            <mvc:mapping path="/**"/>
             <bean class="com.mogul.interception.IndexInterception"/>
         </mvc:interceptor>
     </mvc:interceptors>
+    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+    </bean>
+    <bean class="com.mogul.exception.DefaultException"/>
 </beans>
