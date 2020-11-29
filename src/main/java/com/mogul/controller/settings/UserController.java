@@ -1,4 +1,4 @@
-package com.mogul.controller;
+package com.mogul.controller.settings;
 
 import com.mogul.domian.Result;
 import com.mogul.exception.LoginException;
@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +20,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("login")
+    @RequestMapping(value = "login",method = RequestMethod.POST)
     public Result login(String loginact, String loginpwd, HttpServletRequest request) throws LoginException {
         Map<String,String> map=new HashMap<>();
         map.put("loginact",loginact);
@@ -33,10 +31,4 @@ public class UserController {
         return Result.success(user);
     }
 
-    @RequestMapping("logintest")
-    public ModelAndView loginTest(){
-        ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
-    }
 }

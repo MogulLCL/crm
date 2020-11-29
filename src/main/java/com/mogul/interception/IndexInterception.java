@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class IndexInterception implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         return true;
     }
 

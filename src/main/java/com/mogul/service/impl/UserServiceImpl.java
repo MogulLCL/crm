@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService {
             throw  new LoginException("账号登录ip受限！");
         return userList.get(0);
     }
+
+    @Override
+    public List<User> getName() {
+        return userMapper.selectByExample(new UserExample());
+    }
 }
