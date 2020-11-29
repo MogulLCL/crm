@@ -40,4 +40,5 @@ public class UserServiceImpl implements UserService {
     public List<User> getName() {
         return userMapper.selectByExample(new UserExample());
     }
+
 }

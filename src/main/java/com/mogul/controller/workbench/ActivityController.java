@@ -7,16 +7,13 @@ import com.mogul.service.ActivityService;
 import com.mogul.service.UserService;
 import com.mogul.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping("workbench")
+//@RequestMapping("workbench")
 public class ActivityController {
     @Autowired
     UserService userService;
@@ -33,5 +30,11 @@ public class ActivityController {
         User user=(User)request.getSession().getAttribute("user");
         activity.setCreateby(user.getName());
         return Result.success(activityService.save(activity));
+    }
+
+    @RequestMapping(value = "pagelist",method = RequestMethod.GET)
+    public Result pageList(@RequestParam(value = "pageno",defaultValue = "1") Integer pageno,
+                           @RequestParam(value = "pagesize",defaultValue = "5") Integer pagesize, Activity activity){
+        return Result.success(activityService.pageList(pageno,pagesize,activity));
     }
 }
