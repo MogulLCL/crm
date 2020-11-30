@@ -34,7 +34,8 @@ public class ActivityController {
 
     @RequestMapping(value = "pagelist",method = RequestMethod.GET)
     public Result pageList(@RequestParam(value = "pageno",defaultValue = "1") Integer pageno,
-                           @RequestParam(value = "pagesize",defaultValue = "5") Integer pagesize, Activity activity){
+                           @RequestParam(value = "pagesize",defaultValue = "5") Integer pagesize,
+                           Activity activity){
         return Result.success(activityService.pageList(pageno,pagesize,activity));
     }
 }
