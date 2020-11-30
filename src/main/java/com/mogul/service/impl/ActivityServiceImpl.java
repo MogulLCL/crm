@@ -52,6 +52,7 @@ public class ActivityServiceImpl implements ActivityService {
                 if (!activities.get(o).getOwner().contains(activity.getOwner()))
                     activities.remove(o--);
             pageInfo=new PageInfo<>(activities);
+            System.out.println(pageInfo);
         }
         return pageInfo;
     }
