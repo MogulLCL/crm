@@ -6,15 +6,12 @@ import com.mogul.mapper.ActivityMapper;
 import com.mogul.mapper.UserMapper;
 import com.mogul.pojo.Activity;
 import com.mogul.pojo.ActivityExample;
-import com.mogul.pojo.User;
-import com.mogul.pojo.UserExample;
 import com.mogul.service.ActivityService;
 import com.mogul.util.DateTimeUtil;
 import com.mogul.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -42,9 +39,9 @@ public class ActivityServiceImpl implements ActivityService {
         if(activity.getName()!=null&&!"".equals(activity.getName()))
             criteria.andNameLike("%"+activity.getName()+"%");
         if(activity.getStartdate()!=null&&!"".equals(activity.getStartdate()))
-            criteria.andStartdateLike("%"+activity.getStartdate()+"%");
+            criteria.andStartdateGreaterThanOrEqualTo(activity.getStartdate());
         if(activity.getEnddate()!=null&&!"".equals(activity.getEnddate()))
-            criteria.andEnddateLike("%"+activity.getEnddate()+"%");
+            criteria.andEnddateLessThanOrEqualTo(activity.getEnddate());
         List<Activity> activities= activityMapper.selectByExample(activityExample);
         if(activities.size()!=0) {
             for (Activity a:activities)
