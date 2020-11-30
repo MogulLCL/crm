@@ -35,6 +35,7 @@ public class ActivityServiceImpl implements ActivityService {
         PageHelper.startPage(pageNo,pageSize);
         PageInfo pageInfo=null;
         ActivityExample activityExample=new ActivityExample();
+        activityExample.setOrderByClause("createtime DESC");
         ActivityExample.Criteria criteria= activityExample.createCriteria();
         if(activity.getName()!=null&&!"".equals(activity.getName()))
             criteria.andNameLike("%"+activity.getName()+"%");
