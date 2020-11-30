@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-//@RequestMapping("workbench")
+@RequestMapping("workbench")
 public class ActivityController {
     @Autowired
     UserService userService;

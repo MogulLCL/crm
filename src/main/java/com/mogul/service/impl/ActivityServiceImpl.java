@@ -14,6 +14,7 @@ import com.mogul.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -38,23 +39,24 @@ public class ActivityServiceImpl implements ActivityService {
         PageInfo pageInfo=null;
         ActivityExample activityExample=new ActivityExample();
         ActivityExample.Criteria criteria= activityExample.createCriteria();
-        if(activity.getName()!=null)
-            criteria.andNameLike(activity.getName());
-        if(activity.getStartdate()!=null)
-            criteria.andStartdateLike(activity.getStartdate());
-        if(activity.getEnddate()!=null)
-            criteria.andEnddateLike(activity.getEnddate());
+        if(activity.getName()!=null&&!"".equals(activity.getName()))
+            criteria.andNameLike("%"+activity.getName()+"%");
+        if(activity.getStartdate()!=null&&!"".equals(activity.getStartdate()))
+            criteria.andStartdateLike("%"+activity.getStartdate()+"%");
+        if(activity.getEnddate()!=null&&!"".equals(activity.getEnddate()))
+            criteria.andEnddateLike("%"+activity.getEnddate()+"%");
         List<Activity> activities= activityMapper.selectByExample(activityExample);
         if(activities.size()!=0) {
             for (Activity a:activities)
                 a.setOwner(userMapper.selectByPrimaryKey(a.getOwner()).getName());
-            int size=activities.size();
-            if (activity.getOwner() != null)
-            for (int o=0;o<size;o++)
+            if (activity.getOwner() != null&&!"".equals(activity.getOwner()))
+            for (int o=0;o<activities.size();o++)
                 if (!activities.get(o).getOwner().contains(activity.getOwner()))
-                    activities.remove(o);
+                    activities.remove(o--);
             pageInfo=new PageInfo<>(activities);
         }
         return pageInfo;
     }
+
+
 }
