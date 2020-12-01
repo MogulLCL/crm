@@ -3,6 +3,7 @@ package com.mogul.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mogul.mapper.ActivityMapper;
+import com.mogul.mapper.ActivityRemarkMapper;
 import com.mogul.mapper.UserMapper;
 import com.mogul.pojo.Activity;
 import com.mogul.pojo.ActivityExample;
@@ -21,6 +22,8 @@ public class ActivityServiceImpl implements ActivityService {
     UserMapper userMapper;
     @Autowired
     ActivityMapper activityMapper;
+    @Autowired
+    ActivityRemarkMapper activityRemarkMapper;
 
     @Override
     public int save(Activity activity) {
@@ -55,6 +58,14 @@ public class ActivityServiceImpl implements ActivityService {
             System.out.println(pageInfo);
         }
         return pageInfo;
+    }
+
+    @Override
+    public int delete(String id) {
+        activityRemarkMapper.deleteByActivityId(id);
+        for(String ids:id.split(","))
+            activityMapper.deleteByPrimaryKey(ids);
+        return 1;
     }
 
 

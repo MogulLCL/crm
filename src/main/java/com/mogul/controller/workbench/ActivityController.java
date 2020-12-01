@@ -10,10 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @RestController
-@RequestMapping("workbench")
+@RequestMapping("workbench/activity")
 public class ActivityController {
     @Autowired
     UserService userService;
@@ -38,4 +39,9 @@ public class ActivityController {
                            Activity activity){
         return Result.success(activityService.pageList(pageno,pagesize,activity));
     }
+
+    @RequestMapping(value = "delete",method = RequestMethod.POST)
+    public Result delete(String id){
+      return Result.success(activityService.delete(id));
+    };
 }
