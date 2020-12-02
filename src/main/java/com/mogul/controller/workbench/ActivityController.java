@@ -44,4 +44,15 @@ public class ActivityController {
     public Result delete(String id){
       return Result.success(activityService.delete(id));
     };
+
+    @RequestMapping(value = "getuserandactivity",method = RequestMethod.GET)
+    public Result getUserAndActivity(String id){
+        return Result.success(activityService.getUserAndActivity(id));
+    }
+    @RequestMapping(value = "edit",method = RequestMethod.POST)
+    public Result edit(Activity activity,HttpServletRequest request){
+        User user=(User)request.getSession().getAttribute("user");
+        activity.setEditby(user.getName());
+        return Result.success(activityService.edit(activity));
+    }
 }

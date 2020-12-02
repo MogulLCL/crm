@@ -7,13 +7,16 @@ import com.mogul.mapper.ActivityRemarkMapper;
 import com.mogul.mapper.UserMapper;
 import com.mogul.pojo.Activity;
 import com.mogul.pojo.ActivityExample;
+import com.mogul.pojo.UserExample;
 import com.mogul.service.ActivityService;
 import com.mogul.util.DateTimeUtil;
 import com.mogul.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -66,6 +69,20 @@ public class ActivityServiceImpl implements ActivityService {
         for(String ids:id.split(","))
             activityMapper.deleteByPrimaryKey(ids);
         return 1;
+    }
+
+    @Override
+    public int edit(Activity activity) {
+        activity.setEdittime(DateTimeUtil.getSysTime());
+        return activityMapper.updateByPrimaryKeySelective(activity);
+    }
+
+    @Override
+    public Map<String, Object> getUserAndActivity(String id) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("uList",userMapper.selectByExample(new UserExample()));
+        map.put("a",activityMapper.selectByPrimaryKey(id));
+        return map;
     }
 
 
