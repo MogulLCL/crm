@@ -5,12 +5,10 @@ import com.mogul.pojo.Activity;
 import com.mogul.pojo.User;
 import com.mogul.service.ActivityService;
 import com.mogul.service.UserService;
-import com.mogul.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 
 @RestController
@@ -43,7 +41,7 @@ public class ActivityController {
     @RequestMapping(value = "delete",method = RequestMethod.POST)
     public Result delete(String id){
       return Result.success(activityService.delete(id));
-    };
+    }
 
     @RequestMapping(value = "getuserandactivity",method = RequestMethod.GET)
     public Result getUserAndActivity(String id){
@@ -54,5 +52,10 @@ public class ActivityController {
         User user=(User)request.getSession().getAttribute("user");
         activity.setEditby(user.getName());
         return Result.success(activityService.edit(activity));
+    }
+
+    @RequestMapping(value = "getdetail",method = RequestMethod.GET)
+    public Result getDetail(String id){
+        return Result.success(activityService.getDetail(id));
     }
 }

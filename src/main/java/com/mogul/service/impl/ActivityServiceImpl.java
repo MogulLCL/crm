@@ -85,5 +85,13 @@ public class ActivityServiceImpl implements ActivityService {
         return map;
     }
 
+    @Override
+    public Activity getDetail(String id) {
+        Activity activity=activityMapper.selectByPrimaryKey(id);
+        if(activity!=null)
+        activity.setOwner(userMapper.selectByPrimaryKey(activity.getOwner()).getName());
+        return activity;
+    }
+
 
 }
