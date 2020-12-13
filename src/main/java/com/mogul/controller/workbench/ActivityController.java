@@ -2,6 +2,7 @@ package com.mogul.controller.workbench;
 
 import com.mogul.domian.Result;
 import com.mogul.pojo.Activity;
+import com.mogul.pojo.ActivityRemark;
 import com.mogul.pojo.User;
 import com.mogul.service.ActivityService;
 import com.mogul.service.UserService;
@@ -18,6 +19,7 @@ public class ActivityController {
     UserService userService;
     @Autowired
     ActivityService activityService;
+
 
     @RequestMapping(value = "getuser",method = RequestMethod.GET)
     public Result getUser(){
@@ -57,5 +59,31 @@ public class ActivityController {
     @RequestMapping(value = "getdetail",method = RequestMethod.GET)
     public Result getDetail(String id){
         return Result.success(activityService.getDetail(id));
+    }
+
+    @RequestMapping(value = "getactivityremark",method = RequestMethod.GET)
+    public Result getActivityRemark(String id){
+        return Result.success(activityService.getActivityRemark(id));
+    }
+
+    @RequestMapping(value = "deleteactivityremark",method = RequestMethod.POST)
+    public Result deleteActivityRemark(String id){
+        return Result.success(activityService.deleteActivityRemark(id));
+    }
+
+    @RequestMapping(value = "addactivityremark",method = RequestMethod.POST)
+    public Result addActivityRemark(ActivityRemark activityRemark,HttpServletRequest req){
+        User user=(User)req.getSession().getAttribute("user");
+        activityRemark.setCreateby(user.getName());
+        return Result.success(activityService.addActivityRemark(activityRemark));
+    }
+    @RequestMapping(value = "updateactivityremark",method = RequestMethod.POST)
+    public Result updateActivityRemark(String id,String notecontent,HttpServletRequest req){
+        ActivityRemark activityRemark=new ActivityRemark();
+        User user=(User)req.getSession().getAttribute("user");
+        activityRemark.setEditby(user.getName());
+        activityRemark.setId(id);
+        activityRemark.setNotecontent(notecontent);
+        return Result.success(activityService.updateActivityRemark(activityRemark));
     }
 }

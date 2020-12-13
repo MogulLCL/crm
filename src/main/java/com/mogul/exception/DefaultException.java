@@ -10,7 +10,7 @@ public class DefaultException {
     @ExceptionHandler({Exception.class})
     @ResponseBody
     public Result exceptions(Exception e){
-        return Result.error("",e);
+        return Result.error(e.getMessage());
     }
 
     @ExceptionHandler(LoginException.class)

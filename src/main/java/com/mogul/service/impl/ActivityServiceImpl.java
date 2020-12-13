@@ -5,18 +5,14 @@ import com.github.pagehelper.PageInfo;
 import com.mogul.mapper.ActivityMapper;
 import com.mogul.mapper.ActivityRemarkMapper;
 import com.mogul.mapper.UserMapper;
-import com.mogul.pojo.Activity;
-import com.mogul.pojo.ActivityExample;
-import com.mogul.pojo.UserExample;
+import com.mogul.pojo.*;
 import com.mogul.service.ActivityService;
 import com.mogul.util.DateTimeUtil;
 import com.mogul.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -45,23 +41,17 @@ public class ActivityServiceImpl implements ActivityService {
         ActivityExample.Criteria criteria= activityExample.createCriteria();
         if(activity.getName()!=null&&!"".equals(activity.getName()))
             criteria.andNameLike("%"+activity.getName()+"%");
+        if (activity.getOwner() != null&&!"".equals(activity.getOwner()))
+            criteria.andOwnerLike("%"+activity.getOwner()+"%");
         if(activity.getStartdate()!=null&&!"".equals(activity.getStartdate()))
             criteria.andStartdateGreaterThanOrEqualTo(activity.getStartdate());
         if(activity.getEnddate()!=null&&!"".equals(activity.getEnddate()))
             criteria.andEnddateLessThanOrEqualTo(activity.getEnddate());
-        List<Activity> activities= activityMapper.selectByExample(activityExample);
-        if(activities.size()!=0) {
-            for (Activity a:activities)
-                a.setOwner(userMapper.selectByPrimaryKey(a.getOwner()).getName());
-            if (activity.getOwner() != null&&!"".equals(activity.getOwner()))
-            for (int o=0;o<activities.size();o++)
-                if (!activities.get(o).getOwner().contains(activity.getOwner()))
-                    activities.remove(o--);
-            pageInfo=new PageInfo<>(activities);
-            System.out.println(pageInfo);
-        }
+        List<Activity> activities= activityMapper.selectJoin(activityExample);
+        pageInfo=new PageInfo<>(activities);
         return pageInfo;
     }
+
 
     @Override
     public int delete(String id) {
@@ -80,7 +70,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Map<String, Object> getUserAndActivity(String id) {
         Map<String,Object> map=new HashMap<>();
-        map.put("uList",userMapper.selectByExample(new UserExample()));
+        map.put("uList",userMapper.selectByName());
         map.put("a",activityMapper.selectByPrimaryKey(id));
         return map;
     }
@@ -93,5 +83,32 @@ public class ActivityServiceImpl implements ActivityService {
         return activity;
     }
 
+    @Override
+    public List<ActivityRemark> getActivityRemark(String id) {
+        ActivityRemarkExample activityRemarkExample=new ActivityRemarkExample();
+        activityRemarkExample.createCriteria().andActivityidEqualTo(id);
+        return activityRemarkMapper.selectByExample(activityRemarkExample);
+    }
 
+    @Override
+    public int deleteActivityRemark(String id) {
+        return activityRemarkMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public ActivityRemark addActivityRemark(ActivityRemark activityRemark) {
+        activityRemark.setId(UUIDUtil.getUUID());
+        activityRemark.setCreatetime(DateTimeUtil.getSysTime());
+        activityRemark.setEditflag("0");
+        activityRemarkMapper.insertSelective(activityRemark);
+        return activityRemark;
+    }
+
+    @Override
+    public ActivityRemark updateActivityRemark(ActivityRemark activityRemark) {
+        activityRemark.setEditflag("1");
+        activityRemark.setEdittime(DateTimeUtil.getSysTime());
+        activityRemarkMapper.updateByPrimaryKeySelective(activityRemark);
+        return activityRemark;
+    }
 }

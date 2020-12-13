@@ -9,8 +9,6 @@ import com.mogul.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getName() {
-        return userMapper.selectByExample(new UserExample());
+        return userMapper.selectByName();
     }
 
 }
