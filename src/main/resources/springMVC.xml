@@ -11,7 +11,7 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
-    <context:annotation-config/>
+
 
     <context:component-scan base-package="com.mogul.controller">
         <context:include-filter type="annotation"
@@ -21,6 +21,7 @@
     <mvc:annotation-driven />
 
     <mvc:default-servlet-handler />
+
 
     <!-- 视图定位 -->
     <bean

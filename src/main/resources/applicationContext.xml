@@ -12,7 +12,7 @@
      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="com.mogul.service"/>
+    <context:component-scan base-package="com.mogul"/>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName">
             <value>com.mysql.jdbc.Driver</value>
@@ -47,5 +47,5 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.mogul.mapper"/>
     </bean>
-
+    <bean name="dicService" class="com.mogul.service.impl.DicServiceImpl"/>
 </beans>
