@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mogul.mapper.ClueMapper;
 import com.mogul.mapper.UserMapper;
+import com.mogul.pojo.Activity;
 import com.mogul.pojo.Clue;
 import com.mogul.pojo.ClueExample;
 import com.mogul.service.ClueService;
@@ -31,11 +32,28 @@ public class ClueServiceImpl implements ClueService {
     }
 
     @Override
+    public List<Activity> getClueAndActivity(String id) {
+        return clueMapper.selectByActivity(id);
+    }
+
+    @Override
     public PageInfo pageList(Integer pageno, Integer pagesize, Clue clue) {
         PageHelper.startPage(pageno,pagesize);
         ClueExample clueExample=new ClueExample();
         clueExample.setOrderByClause("a.createTime DESC");
         PageInfo pageInfo=new PageInfo<>(clueMapper.selectByJoin(clueExample));
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo pageList1(Integer pageno, Integer pagesize, Clue clue) {
+        PageHelper.startPage(pageno,pagesize);
+        ClueExample clueExample=new ClueExample();
+        clueExample.setOrderByClause("createTime DESC");
+        List<Clue> clues=clueMapper.selectByExample(clueExample);
+        for(Clue c:clues)
+            c.setOwner(userMapper.selectByPrimaryKey(c.getOwner()).getName());
+        PageInfo pageInfo=new PageInfo<>(clues);
         return pageInfo;
     }
 

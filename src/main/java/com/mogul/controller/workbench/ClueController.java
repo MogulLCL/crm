@@ -62,4 +62,8 @@ public class ClueController {
         return Result.success(clueService.getDetail(id));
     }
 
+    @RequestMapping(value = "getactivity",method = RequestMethod.GET)
+    public Result getIdAndActivity(String id){
+        return Result.success(clueService.getClueAndActivity(id));
+    }
 }

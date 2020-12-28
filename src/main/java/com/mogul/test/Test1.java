@@ -1,6 +1,8 @@
 package com.mogul.test;
 
 import com.github.pagehelper.PageInfo;
+import com.mogul.mapper.ClueMapper;
+import com.mogul.pojo.Activity;
 import com.mogul.pojo.Clue;
 import com.mogul.service.ClueService;
 import com.mogul.util.DateTimeUtil;
@@ -18,6 +20,8 @@ import java.util.List;
 public class Test1 {
     @Autowired
     ClueService clueService;
+    @Autowired
+    ClueMapper clueMapper;
 
     @Test
     public void addClue(){
@@ -55,6 +59,12 @@ public class Test1 {
         PageInfo list=clueService.pageList(1,1,new Clue());
         Clue clue= (Clue) list.getList().get(0);
         System.out.println(clueService.getDetail(clue.getId()).getOwner());
+    }
+
+    @Test
+    public void testClueAndActivity(){
+        List<Activity> clues=clueMapper.selectByActivity("004c3e7a839b4ee3a7f8fb5cf15a9188");
+        System.out.println(clues.get(0).getOwner());
     }
 
 }
