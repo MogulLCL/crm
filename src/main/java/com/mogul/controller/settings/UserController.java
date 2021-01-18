@@ -19,7 +19,7 @@ import java.util.Map;
 public class UserController {
     @Autowired
     UserService userService;
-
+    
     @RequestMapping(value = "login",method = RequestMethod.POST)
     public Result login(String loginact, String loginpwd, HttpServletRequest request) throws LoginException {
         Map<String,String> map=new HashMap<>();

@@ -63,7 +63,10 @@ public class Test1 {
 
     @Test
     public void testClueAndActivity(){
-        List<Activity> clues=clueMapper.selectByActivity("004c3e7a839b4ee3a7f8fb5cf15a9188");
+        Activity activity=new Activity();
+        activity.setId("004c3e7a839b4ee3a7f8fb5cf15a9188");
+        activity.setName("采集");
+        List<Activity> clues=clueMapper.selectByActivity("004c3e7a839b4ee3a7f8fb5cf15a9188","采集");
         System.out.println(clues.get(0).getOwner());
     }
 

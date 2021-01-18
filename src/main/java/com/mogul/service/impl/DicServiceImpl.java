@@ -27,6 +27,7 @@ public class DicServiceImpl implements DicService {
         List<DicType> dicTypes=dicTypeMapper.selectByExample(new DicTypeExample());
         for(DicType dicType:dicTypes){
             DicValueExample dicValueExample=new DicValueExample();
+            dicValueExample.setOrderByClause("orderNo");
             dicValueExample.createCriteria().andTypecodeEqualTo(dicType.getCode());
             List<DicValue> dicValues=dicValueMapper.selectByExample(dicValueExample);
             map.put(dicType.getCode(),dicValues);

@@ -69,9 +69,9 @@
     source, createBy, createTime, editBy, editTime, description, contactSummary, nextContactTime,
     address
   </sql>
-  <select id="selectByActivity" parameterType="String" resultType="com.mogul.pojo.Activity">
+  <select id="selectByClueAndActivity" parameterType="String" resultType="com.mogul.pojo.Activity">
     SELECT
-	tbl_activity.id,
+	tbl_clue_activity_relation.id,
 	tbl_activity.`name`,
 	tbl_activity.startDate,
 	tbl_activity.endDate,
@@ -129,6 +129,38 @@ AND tbl_user.id = tbl_activity.`owner`
     <include refid="Base_Column_List" />
     from tbl_clue
     where id = #{id,jdbcType=CHAR}
+  </select>
+  <select id="selectByActivity"  resultType="com.mogul.pojo.Activity">
+    SELECT
+tbl_activity.id,
+tbl_activity.`name`,
+tbl_activity.startDate,
+tbl_activity.endDate,
+tbl_user.`name` as 'owner'
+FROM
+tbl_activity
+INNER JOIN tbl_user ON tbl_activity.`owner` = tbl_user.id
+WHERE
+tbl_activity.id NOT IN ((SELECT
+tbl_clue_activity_relation.activityId
+FROM
+tbl_clue_activity_relation
+WHERE
+tbl_clue_activity_relation.clueId = #{id})) AND
+tbl_activity.`name` LIKE  '%' #{name} '%'
+  </select>
+  <select id="selectActivityByName" resultType="com.mogul.pojo.Activity">
+    SELECT
+tbl_activity.id,
+tbl_activity.startDate,
+tbl_activity.endDate,
+tbl_activity.`name`,
+tbl_user.`name` AS `owner`
+FROM
+tbl_activity
+INNER JOIN tbl_user ON tbl_user.id = tbl_activity.`owner`
+WHERE
+tbl_activity.`name` LIKE '%' #{aname} '%'
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--

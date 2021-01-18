@@ -62,8 +62,43 @@ public class ClueController {
         return Result.success(clueService.getDetail(id));
     }
 
-    @RequestMapping(value = "getactivity",method = RequestMethod.GET)
+
+
+
+
+
+    @RequestMapping(value = "getclueandactivity",method = RequestMethod.GET)
     public Result getIdAndActivity(String id){
         return Result.success(clueService.getClueAndActivity(id));
     }
+
+    @RequestMapping(value = "deleteclueandactivity",method = RequestMethod.GET)
+    public Result deleteClueAndActivity(String id){
+        return Result.success(clueService.deleteClueAndActivity(id));
+    }
+
+    @RequestMapping(value = "getactivity",method = RequestMethod.GET)
+    public Result getActivity(String name,String id){
+        return Result.success(clueService.getActivity(id,name));
+    }
+    @RequestMapping(value = "getactivitybyname",method = RequestMethod.GET)
+    public Result getActivity(String aname){
+        return Result.success(clueService.getActivityByName(aname));
+    }
+    @RequestMapping(value = "addclueactivity",method = RequestMethod.POST)
+    public Result addClueActivity(String cid,String aid){
+        System.out.println(cid);
+        System.out.println(aid);
+        return Result.success(clueService.addClueActivity(cid,aid));
+    }
+
+    /**
+     * 线索转换
+     */
+    @RequestMapping(value = "addCosCon",method = RequestMethod.POST)
+    public Result addCosCon(String id,int flag,String money,String name,String expecteddate,String stage,String activityid,HttpSession httpSession){
+        User user=(User) httpSession.getAttribute("user");
+        return Result.success(clueService.addCosCon(id,user,flag,money,name,expecteddate,stage,activityid));
+    }
+
 }

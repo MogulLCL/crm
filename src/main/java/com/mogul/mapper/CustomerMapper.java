@@ -3,6 +3,9 @@ package com.mogul.mapper;
 import com.mogul.pojo.Customer;
 import com.mogul.pojo.CustomerExample;
 import java.util.List;
+/**
+ * 客户表
+ */
 
 public interface CustomerMapper {
     /**

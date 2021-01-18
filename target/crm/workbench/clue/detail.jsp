@@ -18,7 +18,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	var id=location.href.split("=")[1];
 	var datadetail;
 	$(function(){
-	    $.ajax({
+	    $.ajax(
+	    		{
             url: "workbench/clue/getdetail",
             data: {
               "id": id
@@ -51,6 +52,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				$("#address").html(datadetail.address);
 				//alert($("#id").val());
             }
+
         })
 
 		$("#remark").focus(function(){
@@ -62,6 +64,35 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				cancelAndSaveBtnDefault = false;
 			}
 		});
+        $("#seach").keydown(function (event) {
+            if(13 === event.keyCode){
+                $.ajax({
+                    url: "workbench/clue/getactivity",
+                    data: {
+                    	"id": id,
+						"name": $.trim($("#seach").val())
+                    },
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+						var html = '';
+                    	if(data.code=200) {
+							$.each(data.data, function (i, a) {
+								html += '<tr>'
+								html += '<td><input name="xz" value="' + a.id + '" type="checkbox"/></td>'
+								html += '<td>' + a.name + '</td>'
+								html += '<td>' + a.startdate + '</td>'
+								html += '<td>' + a.enddate + '</td>'
+								html += '<td>' + a.owner + '</td>'
+								html += '</tr>'
+							})
+							$("#activitylist").html(html);
+						}
+                    }
+                })
+                return false;
+            }
+        });
 
 		$("#cancelBtn").click(function(){
 			//显示
@@ -87,13 +118,51 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$(this).children("span").css("color","#E6E6E6");
 		});
 
+		$("#ClueActivityRelation").click(function () {
+			var $xz=$("input[name=xz]:checked");
+			if($xz.length==0){
+				alert("至少选中一条数据！");
+			}else {
+				var data="cid="+id+"&";
+				for(var a=0;a<$xz.length;a++){
+					data+="aid="+$($xz[a]).val();
+					if(a<$xz.length-1){
+						data+="&";
+					}
+				}
+				//alert(data);
+				$.ajax({
+					url: "workbench/clue/addclueactivity",
+					data: data,
+					type: "post",
+					dataType: "json",
+					async: false,
+					success: function (data) {
+						if(data.code==200){
+							$("#bundModal").modal("hide");
+							return true;
+						}
+						alert("添加失败！")
+						return false;
+					}
+				});
+				$("#seach").val("");
+				$("#activitylist").html("");
+				getIdAndActivity();
+			}
+		})
+
+		$("#convert").click(function () {
+			window.location.href="workbench/clue/convert.jsp?id="+id+"&company="+datadetail.company+"&fullname="+datadetail.fullname+"&owner="+datadetail.owner;
+		})
+
 		getIdAndActivity();
 
 	});
 
 	function getIdAndActivity(){
 		$.ajax({
-			url: "workbench/clue/getactivity",
+			url: "workbench/clue/getclueandactivity",
 			data: {
 				"id": id
 			},
@@ -112,11 +181,25 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				})
 				$("#IdAndActivity").html(html);
 			}
-		})
+		});
 	}
 
 	function remove(id) {
-		alert(id);
+		$.ajax({
+			url: "workbench/clue/deleteclueandactivity",
+			data: {
+				"id": id
+			},
+			dataType: "json",
+			type: "get",
+			success: function (d) {
+				if(d.code==200) {
+					$("#d"+id).remove();
+					return true;
+				}
+				alert("删除失败！");
+			}
+		});
 	}
 </script>
 
@@ -137,7 +220,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" style="width: 300px;" id="seach" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -153,27 +236,20 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="activitylist">
+<%--						<tr>--%>
+<%--							<td><input type="checkbox"/></td>--%>
+<%--							<td></td>--%>
+<%--							<td></td>--%>
+<%--							<td>请按名称搜索</td>--%>
+<%--							<td></td>--%>
+<%--						</tr>--%>
 						</tbody>
 					</table>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="ClueActivityRelation" >关联</button>
 				</div>
 			</div>
 		</div>
@@ -346,7 +422,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<h3>李四先生 <small>动力节点</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/clue/convert.jsp';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<button type="button" class="btn btn-default" id="convert"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
