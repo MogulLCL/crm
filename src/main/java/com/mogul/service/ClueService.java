@@ -3,6 +3,7 @@ package com.mogul.service;
 import com.github.pagehelper.PageInfo;
 import com.mogul.pojo.Activity;
 import com.mogul.pojo.Clue;
+import com.mogul.pojo.Tran;
 import com.mogul.pojo.User;
 
 import java.util.List;
@@ -29,7 +30,9 @@ public interface ClueService {
 
     int addClueActivity(String cid, String aid);
 
-    int addCosCon(String id, User user, int flag, String money, String name, String expecteddate, String stage, String activityid);
+    //int addCosCon(String id, User user, int flag, String money, String name, String expecteddate, String stage, String activityid);
 
     List<Activity> getActivityByName(String aname);
+
+    int addCosCon(String id,int flag, User user,Tran t);
 }

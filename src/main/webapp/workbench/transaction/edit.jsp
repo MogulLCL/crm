@@ -1,20 +1,25 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8" isELIgnored="false"%>
+<%
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 	request.getServerPort() + request.getContextPath() + "/";
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+	<base href="<%=basePath%>">
+<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="../../jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
-
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
 </head>
 <body>
 
-	<!-- 查找市场活动 -->	
+	<!-- 查找市场活动 -->
 	<div class="modal fade" id="findMarketActivity" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 80%;">
 			<div class="modal-content">
@@ -65,7 +70,7 @@
 		</div>
 	</div>
 
-	<!-- 查找联系人 -->	
+	<!-- 查找联系人 -->
 	<div class="modal fade" id="findContacts" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 80%;">
 			<div class="modal-content">
@@ -112,8 +117,8 @@
 			</div>
 		</div>
 	</div>
-	
-	
+
+
 	<div style="position:  relative; left: 30px;">
 		<h3>更新交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
@@ -137,7 +142,7 @@
 				<input type="text" class="form-control" id="edit-amountOfMoney" value="5,000">
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="edit-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
@@ -148,7 +153,7 @@
 				<input type="text" class="form-control" id="edit-expectedClosingDate" value="2017-02-07">
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="edit-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
@@ -170,7 +175,7 @@
 			  </select>
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="edit-transactionType" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
@@ -185,7 +190,7 @@
 				<input type="text" class="form-control" id="edit-possibility" value="90">
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="edit-clueSource" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
@@ -212,35 +217,35 @@
 				<input type="text" class="form-control" id="edit-activitySrc" value="发传单">
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="edit-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="edit-contactsName" value="李四">
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="create-describe" class="col-sm-2 control-label">描述</label>
 			<div class="col-sm-10" style="width: 70%;">
 				<textarea class="form-control" rows="3" id="create-describe"></textarea>
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
 			<div class="col-sm-10" style="width: 70%;">
 				<textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-nextContactTime">
 			</div>
 		</div>
-		
+
 	</form>
 </body>
 </html>

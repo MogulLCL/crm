@@ -8,21 +8,82 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <head>
 <meta charset="UTF-8">
 	<base href="<%=basePath%>">
-<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-
+	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="jquery/bs_pagination/jquery.bs_pagination.min.css">
+	<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+	<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
 <script type="text/javascript">
 
 	$(function(){
-
-
-
+		pageList(1,5)
 	});
+
+	function pageList(pageNo,pageSize) {
+		$.ajax({
+			url: "workbench/tran/list",
+			data: {
+				"pageno": pageNo,
+				"pagesize": pageSize,
+				"cname": $.trim($("#").val()),
+				"uname": $.trim($("#").val()),
+				"tname": $.trim($("#").val()),
+				"fullname": $.trim($("#").val()),
+				"type": $.trim($("#").val()),
+				"source": $.trim($("#").val()),
+				"stage": $.trim($("#").val())
+			},
+			type: "get",
+			dataType: "json",
+			success: function (d) {
+				//alert(d.data);
+				var html="";
+				var datalist=d.data;
+				$.each(d.data.list,function (a,i) {
+				    var cname,fullname;
+				    if(i.hasOwnProperty("customer")) cname = i.customer.name;
+				    else cname="";
+                    if(i.hasOwnProperty("contacts"))fullname = i.contacts.fullname;
+					else fullname="";
+					html+='<tr>'
+					html+='<td><input type="checkbox" /></td>'
+					html+='<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/transaction/detail.jsp?id='+i.id+'\';">'+i.name+'</a></td>'
+					html+='<td>'+cname+'</td>'
+					html+='<td>'+i.stage+'</td>'
+					html+='<td>'+i.type+'</td>'
+					html+='<td>'+i.user.name+'</td>'
+					html+='<td>'+i.source+'</td>'
+					html+='<td>'+fullname+'</td>'
+					html+='</tr>'
+				})
+				$("#datalist").html(html);
+				$("#tranPage").bs_pagination({
+					currentPage: datalist.pageNum, // 页码
+					rowsPerPage: datalist.pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: datalist.pages, // 总页数
+					totalRows: datalist.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+
+			}
+		})
+	}
 
 </script>
 </head>
@@ -134,7 +195,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" onclick="window.location.href='workbench/transaction/save.jsp';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" onclick="window.location.href='workbench/transaction/edit.html';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-default" onclick="window.location.href='workbench/transaction/edit.jsp';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 
@@ -154,7 +215,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td>联系人名称</td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="datalist">
 						<tr>
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/transaction/detail.jsp';">动力节点-交易01</a></td>
@@ -180,38 +241,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			</div>
 
 			<div style="height: 50px; position: relative;top: 20px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
+				<div id="tranPage"></div>
 			</div>
 
 		</div>

@@ -41,26 +41,51 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		})
 
 		$("#add").click(function () {
-			alert($("#activityid").val());
+			var activityid = $("#activityid").val();
+			var id = '${param.id}';
 			if($("#isCreateTransaction:checked").val()=='on') {
-				alert('${param.id}');
+				$.ajax({
+					url: "workbench/clue/addcoscon",
+					data: {
+						"id": id,
+						"flag": 1,
+						"activityid": activityid,
+						"money": $.trim($("#amountOfMoney").val()),
+						"name": $.trim($("#tradeName").val()),
+						"expecteddate": $.trim($("#expectedClosingDate").val()),
+						"stage": $.trim($("#stage").val())
+					},
+					type: "post",
+					async: false,
+					success: function (d) {
+						if(d.code==200) {
+							window.location.href = "workbench/clue/index.jsp";
+							return true;
+						}
+						alert(d.msg);
+						return false;
+					}
+				})
 			}else{
 				$.ajax({
-					url: "workbench/clue/",
-					type:"post"
+					url: "workbench/clue/addcoscon",
+					data: {
+						"id": id,
+						"flag": 0
+					},
+					type: "post",
+					async: false,
+					success: function (d) {
+						if(d.code==200) {
+							window.location.href = "workbench/clue/index.jsp";
+							return true;
+						}
+						alert(d.msg);
+						return false;
+					}
 				})
+
 			}
-			// $.ajax({
-			// 	url: "",
-			// 	data: {
-			//
-			// 	},
-			// 	type: "post",
-			// 	dataType: "json",
-			// 	success :function (data) {
-			//
-			// 	}
-			// });
 		})
 
 		$("#aname").keydown(function (event) {

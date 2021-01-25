@@ -1,10 +1,14 @@
 package com.mogul.controller.workbench;
 
 import com.mogul.domian.Result;
+import com.mogul.exception.LoginException;
+import com.mogul.exception.OtherExcption;
 import com.mogul.pojo.Clue;
+import com.mogul.pojo.Tran;
 import com.mogul.pojo.User;
 import com.mogul.service.ClueService;
 import com.mogul.service.UserService;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("workbench/clue")
@@ -95,10 +100,14 @@ public class ClueController {
     /**
      * 线索转换
      */
-    @RequestMapping(value = "addCosCon",method = RequestMethod.POST)
-    public Result addCosCon(String id,int flag,String money,String name,String expecteddate,String stage,String activityid,HttpSession httpSession){
+    @RequestMapping(value = "addcoscon",method = RequestMethod.POST)
+    public Result addCosCon(String id, int flag, Tran tran, HttpSession httpSession) throws OtherExcption {
         User user=(User) httpSession.getAttribute("user");
-        return Result.success(clueService.addCosCon(id,user,flag,money,name,expecteddate,stage,activityid));
+        if(flag==1){
+            if(tran.getName()==null||"".equals(tran.getName()))throw new OtherExcption("请输入交易名称");
+            if(tran.getStage()==null||"".equals(tran.getStage()))throw new OtherExcption("请输入交易阶段");
+        }
+        return Result.success(clueService.addCosCon(id,flag,user,tran));
     }
 
 }

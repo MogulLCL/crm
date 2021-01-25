@@ -90,6 +90,15 @@
     from tbl_customer
     where id = #{id,jdbcType=CHAR}
   </select>
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+SELECT
+tbl_customer.`name`
+FROM
+tbl_customer
+WHERE
+tbl_customer.`name` LIKE '%' #{name} '%'
+
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--
       WARNING - @mbg.generated
